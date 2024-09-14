@@ -7,7 +7,7 @@ import numpy as np
 
 
 
-dataset=pd.read_csv('DATA/recipes1.csv')
+dataset=pd.read_csv('recipes1.csv')
 columns=['Name','RecipeIngredientParts','Calories','FatContent','SaturatedFatContent','CholesterolContent','SodiumContent','CarbohydrateContent','FiberContent','SugarContent','ProteinContent']
 dataset=dataset[columns]
 print(dataset.head(5))
