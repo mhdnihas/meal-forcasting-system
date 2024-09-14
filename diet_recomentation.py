@@ -4,10 +4,44 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer
 import pandas as pd
 import numpy as np
+from io import StringIO
+import requests
+import re
+import csv
+import io
+
+import gdown
+import pandas as pd
+from io import StringIO
+import re
+
+def fix_quotes(text):
+    # Remove quotes from start and end of each field
+    text = re.sub(r'^"|"$', '', text)
+    
+    # Find quoted fields and remove quotes
+    fields = re.findall(r'"([^"]*)"', text)
+    for i, field in enumerate(fields):
+        if i > 0:
+            text = text.replace(f'"{field}"', f'"{field}"'.replace('"', '""'))
+    
+    return text
+
+google_drive_url = 'https://drive.google.com/file/d/1a8IzQJEt_1Xe5osw7slWZZbNsqdjMfsZ/view?usp=sharing'
+file_id = google_drive_url.split('/d/')[1].split('/')[0]
+download_url = f'https://drive.google.com/uc?id={file_id}&export=download'
+
+gdown.download(download_url, 'recipes1.csv.gz', quiet=False)
+
+dataset = pd.read_csv('recipes1.csv.gz', compression='gzip')
 
 
 
-dataset=pd.read_csv('recipes1.csv')
+
+#dataset = pd.read_csv(StringIO(fixed_csv_content), engine='python')
+    
+
+
 columns=['Name','RecipeIngredientParts','Calories','FatContent','SaturatedFatContent','CholesterolContent','SodiumContent','CarbohydrateContent','FiberContent','SugarContent','ProteinContent']
 dataset=dataset[columns]
 print(dataset.head(5))
