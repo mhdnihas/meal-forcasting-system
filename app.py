@@ -10,7 +10,8 @@ import diet_recomentation
 from diet_recomentation import calculate_nutritional_needs,recommand
 import numpy as np
 import pandas as pd
-
+from keras import backend as K
+import tensorflow as tf
         
 with open('Model/scaler_params.json', 'r') as file:
     scaler_params = json.load(file)
@@ -20,12 +21,13 @@ scaler_loaded.mean_ = np.array(scaler_params['mean'])
 scaler_loaded.var_ = np.array(scaler_params['var'])
 scaler_loaded.scale_ = np.sqrt(scaler_loaded.var_)
 
-model=joblib.load('Model/lstmhyperparameter.pkl')
 
+@st.cache_resource
 def predict_orders(features):
     input_data = np.array(features )
     
     input_data_reshaped = input_data.reshape(1, -1)
+    model=joblib.load('Model/lstmhyperparameter.pkl')
 
     
     scaled_data = scaler_loaded.transform(input_data_reshaped)
@@ -689,3 +691,5 @@ if st.session_state.interface == 'User':
     
 elif st.session_state.interface == 'Client':
     client_interface(center_data, meal_data, predict_orders)
+    K.clear_session()
+    tf.compat.v1.reset_default_graph()
